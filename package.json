@@ -1,0 +1,92 @@
+{
+  "name": "elysia-cronyx",
+  "version": "0.0.0",
+  "description": "A plugin to harness the power of Cronyx's script-based task scheduling in your Elysia applications.",
+  "type": "module",
+  "module": "dist/index.ts",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "format": "prettier **/*.{md,ts,cts,json} -w",
+    "format:check": "prettier **/*.{md,ts,cts,json} --check",
+    "lint": "eslint **/*.{ts,cts} --quiet",
+    "lint:fix": "eslint **/*.{ts,cts} --quiet --fix",
+    "prepare": "husky install",
+    "prepublishOnly": "tsc -p tsconfig.build.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yujiosaka/ElysiaCronyx.git"
+  },
+  "keywords": [
+    "cron",
+    "crontab",
+    "cronjob",
+    "scheduler",
+    "job-scheduler",
+    "task-scheduler",
+    "mongodb",
+    "redis",
+    "mysql",
+    "postgres",
+    "bun",
+    "elysia",
+    "plugin"
+  ],
+  "author": "Yuji Isobe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yujiosaka/ElysiaCronyx/issues"
+  },
+  "homepage": "https://github.com/yujiosaka/ElysiaCronyx#readme",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "debug": "^4.3.4",
+    "mongoose": "^7.6.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.2",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^11.0.0",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^11.0.0",
+    "@semantic-release/release-notes-generator": "^12.0.0",
+    "@types/debug": "^4.1.10",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "bun-types": "latest",
+    "cronyx": "^2.4.1",
+    "date-fns": "^2.30.0",
+    "elysia": "^0.7.21",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "mysql": "^2.18.1",
+    "pg": "^8.11.3",
+    "prettier": "^3.0.3",
+    "redis": "^4.6.10",
+    "semantic-release": "^22.0.5",
+    "typeorm": "^0.3.17",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "cronyx": "^2.4.1",
+    "elysia": "^0.7.21"
+  },
+  "lint-staged": {
+    "**/*.{ts,cts}": [
+      "eslint --fix"
+    ],
+    "**/*.{md,ts,cts,json}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.yml"],
+  "service": "app",
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "github.vscode-github-actions",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}
