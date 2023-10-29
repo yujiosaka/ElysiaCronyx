@@ -11,7 +11,7 @@ const DurationDTO = t.Object({
 });
 
 /**
- * @internal
+ * @public
  */
 export const CreateBodyDTO = t.Object({
   jobInterval: t.Union([DurationDTO, t.String(), t.Number()]),
@@ -39,7 +39,7 @@ export const UpdateParamsDTO = t.Object({
 });
 
 /**
- * @internal
+ * @public
  */
 export const CreateResponseDTO = t.Nullable(
   t.Object({
@@ -51,6 +51,6 @@ export const CreateResponseDTO = t.Nullable(
 );
 
 /**
- * @internal
+ * @public
  */
 export const UpdateResponseDTO = t.Void();
