@@ -50,9 +50,13 @@ export default function cronyx<S extends BaseJobStore<I>, I = JobLockId<S>>(opti
 
           return {
             id: job.id?.toString() ?? null,
+            name: job.name,
             interval: job.interval,
             intervalStartedAt: job.intervalStartedAt.toISOString(),
             intervalEndedAt: job.intervalEndedAt.toISOString(),
+            isActive: job.isActive,
+            createdAt: job.createdAt.toISOString(),
+            updatedAt: job.updatedAt.toISOString(),
           };
         },
         { params: CreateParamsDTO, body: CreateBodyDTO, response: CreateResponseDTO },

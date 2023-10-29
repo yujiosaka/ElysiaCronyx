@@ -44,9 +44,13 @@ export const UpdateParamsDTO = t.Object({
 export const CreateResponseDTO = t.Nullable(
   t.Object({
     id: t.Nullable(t.String()),
+    name: t.String(),
     interval: t.Number(),
     intervalStartedAt: t.String({ format: "date-time" }),
     intervalEndedAt: t.String({ format: "date-time" }),
+    isActive: t.Boolean(),
+    createdAt: t.String({ format: "date-time" }),
+    updatedAt: t.String({ format: "date-time" }),
   }),
 );
 

@@ -32,6 +32,7 @@ describe("Manager", () => {
     // @ts-ignore
     job = new Job(jobStore, lastJobLock);
     jobStore = {
+      sync: mock(() => Promise.resolve()),
       close: mock(() => Promise.resolve()),
       fetchLastJobLock: mock(() => Promise.resolve(lastJobLock)),
       activateJobLock: mock(() => Promise.resolve(activatedJobLock)),
