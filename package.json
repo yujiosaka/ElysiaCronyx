@@ -78,7 +78,7 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "cronyx": "^2.4.1",
+    "cronyx": "^3.0.0",
     "elysia": "^0.7.21"
   },
   "lint-staged": {
