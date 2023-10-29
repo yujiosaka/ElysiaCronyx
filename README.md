@@ -66,7 +66,7 @@ $ docker-compose up --build
 
 This will start testing in watch mode.
 
-## Debugging tips
+## 🐞 Debugging tips
 
 ### Enable debug logging
 
