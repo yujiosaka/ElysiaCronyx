@@ -1,6 +1,6 @@
 {
   "name": "elysia-cronyx",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A plugin to harness the power of Cronyx's script-based task scheduling in your Elysia applications.",
   "type": "module",
   "module": "dist/index.ts",
