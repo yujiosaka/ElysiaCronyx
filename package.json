@@ -79,7 +79,7 @@
   },
   "peerDependencies": {
     "cronyx": "^3.0.0",
-    "elysia": "^0.7.21"
+    "elysia": "^0.7.0"
   },
   "lint-staged": {
     "**/*.{ts,cts}": [
