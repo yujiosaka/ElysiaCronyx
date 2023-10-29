@@ -9,12 +9,6 @@
         "changelogFile": "docs/CHANGELOG.md"
       }
     ],
-    [
-      "@semantic-release/exec",
-      {
-        "publishCmd": "echo 'nextVer=${nextRelease.version}' >> $GITHUB_OUTPUT"
-      }
-    ],
     "@semantic-release/npm",
     [
       "@semantic-release/git",
