@@ -20,6 +20,9 @@
     "url": "git+https://github.com/yujiosaka/ElysiaCronyx.git"
   },
   "keywords": [
+    "bun",
+    "elysia",
+    "plugin",
     "cron",
     "crontab",
     "cronjob",
@@ -27,12 +30,9 @@
     "job-scheduler",
     "task-scheduler",
     "mongodb",
-    "redis",
     "mysql",
     "postgres",
-    "bun",
-    "elysia",
-    "plugin"
+    "redis"
   ],
   "author": "Yuji Isobe",
   "license": "MIT",
