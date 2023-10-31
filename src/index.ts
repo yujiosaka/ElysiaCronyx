@@ -4,8 +4,6 @@ import { Elysia } from "elysia";
 import { CreateBodyDTO, CreateParamsDTO, CreateResponseDTO, UpdateParamsDTO, UpdateResponseDTO } from "./dto";
 import Manager from "./manager";
 
-export { CreateBodyDTO, CreateResponseDTO, UpdateResponseDTO };
-
 /**
  * @public
  */
