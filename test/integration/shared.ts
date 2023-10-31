@@ -14,10 +14,9 @@ export function testBehavesLikeCronyxPlugin<S extends BaseJobStore<I>, I = JobLo
   const secondJobIntervalEndedAt = add(requestedAt, { days: 1 });
   const timezone = "Asia/Tokyo";
   const jobName = "jobName";
+  const jobInterval = 1000 * 60 * 60 * 24; // 1 day
   const jobOptions = {
     jobInterval: "0 0 0 * * *", // daily
-    startBuffer: { minutes: 30 },
-    retryInterval: { days: 1 },
   };
 
   let app: Elysia;
@@ -39,64 +38,66 @@ export function testBehavesLikeCronyxPlugin<S extends BaseJobStore<I>, I = JobLo
     setSystemTime();
   });
 
-  test("does not run next job before start buffer", async () => {
-    // first job
-    const firstJob = await requestJobStart(jobOptions);
-    expect(firstJob?.id).not.toBe(null);
-    expect(firstJob?.name).toBe(jobName);
-    expect(firstJob?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
-    expect(firstJob?.intervalStartedAt).toBe(firstJobIntervalStartedAt.toISOString());
-    expect(firstJob?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
-    expect(firstJob?.isActive).toBe(true);
-    expect(firstJob?.createdAt).toBeString();
-    expect(firstJob?.updatedAt).toBeString();
-    await finishJob(firstJob!.id);
-
-    setSystemTime(add(requestedAt, { days: 1 }));
-
-    // second job before start buffer
-    const secondJobBeforeStartBuffer = await requestJobStart(jobOptions);
-    expect(secondJobBeforeStartBuffer).toBe(null);
-
-    setSystemTime(add(requestedAt, { days: 1, minutes: 30 }));
-
-    // second job after start buffer
-    const secondJobAfterStartBuffer = await requestJobStart(jobOptions);
-    expect(secondJobAfterStartBuffer?.id).not.toBe(null);
-    expect(secondJobAfterStartBuffer?.name).toBe(jobName);
-    expect(secondJobAfterStartBuffer?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
-    expect(secondJobAfterStartBuffer?.intervalStartedAt).toBe(secondJobIntervalStartedAt.toISOString());
-    expect(secondJobAfterStartBuffer?.isActive).toBe(true);
-    expect(secondJobAfterStartBuffer?.createdAt).toBeString();
-    expect(secondJobAfterStartBuffer?.updatedAt).toBeString();
-    expect(secondJobAfterStartBuffer?.intervalEndedAt).toBe(secondJobIntervalEndedAt.toISOString());
-    await finishJob(secondJobAfterStartBuffer!.id);
-  });
-
   test("reruns job after interruption", async () => {
     // first job with interruption
     const firstJobWithInterruption = await requestJobStart(jobOptions);
     expect(firstJobWithInterruption?.id).not.toBe(null);
     expect(firstJobWithInterruption?.name).toBe(jobName);
-    expect(firstJobWithInterruption?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
+    expect(firstJobWithInterruption?.interval).toBe(jobInterval);
     expect(firstJobWithInterruption?.intervalStartedAt).toBe(firstJobIntervalStartedAt.toISOString());
+    expect(firstJobWithInterruption?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     expect(firstJobWithInterruption?.isActive).toBe(true);
     expect(firstJobWithInterruption?.createdAt).toBeString();
     expect(firstJobWithInterruption?.updatedAt).toBeString();
-    expect(firstJobWithInterruption?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     await interruptJob(firstJobWithInterruption!.id);
 
     // first job
     const firstJob = await requestJobStart(jobOptions);
     expect(firstJob?.id).not.toBe(null);
     expect(firstJob?.name).toBe(jobName);
-    expect(firstJob?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
+    expect(firstJob?.interval).toBe(jobInterval);
     expect(firstJob?.intervalStartedAt).toBe(firstJobIntervalStartedAt.toISOString());
+    expect(firstJob?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     expect(firstJob?.isActive).toBe(true);
     expect(firstJob?.createdAt).toBeString();
     expect(firstJob?.updatedAt).toBeString();
-    expect(firstJob?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     await finishJob(firstJob!.id);
+  });
+
+  test("does not run next job before start buffer", async () => {
+    // first job
+    const firstJob = await requestJobStart(jobOptions);
+    expect(firstJob?.id).not.toBe(null);
+    expect(firstJob?.name).toBe(jobName);
+    expect(firstJob?.interval).toBe(jobInterval);
+    expect(firstJob?.intervalStartedAt).toBe(firstJobIntervalStartedAt.toISOString());
+    expect(firstJob?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
+    expect(firstJob?.isActive).toBe(true);
+    expect(firstJob?.createdAt).toBeString();
+    expect(firstJob?.updatedAt).toBeString();
+    await finishJob(firstJob!.id);
+
+    const jobOptionsWithStartBuffer = { ...jobOptions, startBuffer: { minutes: 30 } } as const;
+
+    setSystemTime(add(requestedAt, { days: 1 }));
+
+    // second job before start buffer
+    const secondJobBeforeStartBuffer = await requestJobStart(jobOptionsWithStartBuffer);
+    expect(secondJobBeforeStartBuffer).toBe(null);
+
+    setSystemTime(add(requestedAt, { days: 1, minutes: 30 }));
+
+    // second job after start buffer
+    const secondJobAfterStartBuffer = await requestJobStart(jobOptionsWithStartBuffer);
+    expect(secondJobAfterStartBuffer?.id).not.toBe(null);
+    expect(secondJobAfterStartBuffer?.name).toBe(jobName);
+    expect(secondJobAfterStartBuffer?.interval).toBe(jobInterval);
+    expect(secondJobAfterStartBuffer?.intervalStartedAt).toBe(secondJobIntervalStartedAt.toISOString());
+    expect(secondJobAfterStartBuffer?.intervalEndedAt).toBe(secondJobIntervalEndedAt.toISOString());
+    expect(secondJobAfterStartBuffer?.isActive).toBe(true);
+    expect(secondJobAfterStartBuffer?.createdAt).toBeString();
+    expect(secondJobAfterStartBuffer?.updatedAt).toBeString();
+    await finishJob(secondJobAfterStartBuffer!.id);
   });
 
   test("reruns job after retry interval", async () => {
@@ -104,69 +105,69 @@ export function testBehavesLikeCronyxPlugin<S extends BaseJobStore<I>, I = JobLo
     const firstJobWithoutFinish = await requestJobStart(jobOptions);
     expect(firstJobWithoutFinish?.id).not.toBe(null);
     expect(firstJobWithoutFinish?.name).toBe(jobName);
-    expect(firstJobWithoutFinish?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
+    expect(firstJobWithoutFinish?.interval).toBe(jobInterval);
     expect(firstJobWithoutFinish?.intervalStartedAt).toBe(firstJobIntervalStartedAt.toISOString());
+    expect(firstJobWithoutFinish?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     expect(firstJobWithoutFinish?.isActive).toBe(true);
     expect(firstJobWithoutFinish?.createdAt).toBeString();
     expect(firstJobWithoutFinish?.updatedAt).toBeString();
-    expect(firstJobWithoutFinish?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
+
+    const jobOptionsWithRetryInterval = { ...jobOptions, retryInterval: { days: 1 } } as const;
 
     // first job before retry interval
-    const firstJobBeforeRetryInterval = await requestJobStart(jobOptions);
+    const firstJobBeforeRetryInterval = await requestJobStart(jobOptionsWithRetryInterval);
     expect(firstJobBeforeRetryInterval).toBe(null);
 
     setSystemTime(add(requestedAt, { days: 2 }));
 
     // first job after retry interval
-    const firstJobAfterRetryInterval = await requestJobStart(jobOptions);
+    const firstJobAfterRetryInterval = await requestJobStart(jobOptionsWithRetryInterval);
     expect(firstJobAfterRetryInterval?.id).not.toBe(null);
     expect(firstJobAfterRetryInterval?.name).toBe(jobName);
-    expect(firstJobAfterRetryInterval?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
+    expect(firstJobAfterRetryInterval?.interval).toBe(jobInterval);
     expect(firstJobAfterRetryInterval?.intervalStartedAt).toBe(firstJobIntervalStartedAt.toISOString());
+    expect(firstJobAfterRetryInterval?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     expect(firstJobAfterRetryInterval?.isActive).toBe(true);
     expect(firstJobAfterRetryInterval?.createdAt).toBeString();
     expect(firstJobAfterRetryInterval?.updatedAt).toBeString();
-    expect(firstJobAfterRetryInterval?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     await finishJob(firstJobAfterRetryInterval!.id);
   });
 
   test("runs job with no lock", async () => {
+    const jobOptionsWithNoLock = { ...jobOptions, noLock: true } as const;
+
     // first job without finish
-    const firstJobWithoutFinish = await requestJobStart({ ...jobOptions, noLock: true });
+    const firstJobWithoutFinish = await requestJobStart(jobOptionsWithNoLock);
     expect(firstJobWithoutFinish?.id).toBe(null);
     expect(firstJobWithoutFinish?.name).toBe(jobName);
-    expect(firstJobWithoutFinish?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
+    expect(firstJobWithoutFinish?.interval).toBe(jobInterval);
     expect(firstJobWithoutFinish?.intervalStartedAt).toBe(firstJobIntervalStartedAt.toISOString());
+    expect(firstJobWithoutFinish?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     expect(firstJobWithoutFinish?.isActive).toBe(true);
     expect(firstJobWithoutFinish?.createdAt).toBeString();
     expect(firstJobWithoutFinish?.updatedAt).toBeString();
-    expect(firstJobWithoutFinish?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
 
     // first job with interruption
-    const firstJobWithFinish = await requestJobStart({ ...jobOptions, noLock: true });
+    const firstJobWithFinish = await requestJobStart(jobOptionsWithNoLock);
     expect(firstJobWithFinish?.id).toBe(null);
     expect(firstJobWithFinish?.name).toBe(jobName);
-    expect(firstJobWithFinish?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
+    expect(firstJobWithFinish?.interval).toBe(jobInterval);
     expect(firstJobWithFinish?.intervalStartedAt).toBe(firstJobIntervalStartedAt.toISOString());
+    expect(firstJobWithFinish?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
     expect(firstJobWithFinish?.isActive).toBe(true);
     expect(firstJobWithFinish?.createdAt).toBeString();
     expect(firstJobWithFinish?.updatedAt).toBeString();
-    expect(firstJobWithFinish?.intervalEndedAt).toBe(firstJobIntervalEndedAt.toISOString());
 
-    // second job
-    const secondJob = await requestJobStart({
-      ...jobOptions,
-      noLock: true,
-      jobIntervalStartedAt: secondJobIntervalStartedAt,
-    });
+    // second job with specified job interval started at
+    const secondJob = await requestJobStart({ ...jobOptionsWithNoLock, jobIntervalStartedAt: secondJobIntervalStartedAt });
     expect(secondJob?.id).toBe(null);
     expect(secondJob?.name).toBe(jobName);
-    expect(secondJob?.interval).toBe(1000 * 60 * 60 * 24); // 1 day
+    expect(secondJob?.interval).toBe(0);
     expect(secondJob?.intervalStartedAt).toBe(secondJobIntervalStartedAt.toISOString());
+    expect(secondJob?.intervalEndedAt).toBe(secondJobIntervalStartedAt.toISOString());
     expect(secondJob?.isActive).toBe(true);
     expect(secondJob?.createdAt).toBeString();
     expect(secondJob?.updatedAt).toBeString();
-    expect(secondJob?.intervalEndedAt).toBe(secondJobIntervalEndedAt.toISOString());
   });
 
   test("interrupts finished job", async () => {
