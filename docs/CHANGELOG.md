@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/yujiosaka/ElysiaCronyx/compare/v1.2.0...v1.2.1) (2023-10-31)
+
+
+### Reverts
+
+* Revert "feat: export dtos from index" ([9f29320](https://github.com/yujiosaka/ElysiaCronyx/commit/9f29320b114cf8080d65b9c6745ac69cc7daface))
+
 # [1.2.0](https://github.com/yujiosaka/ElysiaCronyx/compare/v1.1.0...v1.2.0) (2023-10-29)
 
 
