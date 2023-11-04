@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/yujiosaka/ElysiaCronyx/compare/v1.2.2...v1.2.3) (2023-11-04)
+
+
+### Bug Fixes
+
+* bump cronyx version to fix a bug ([16627df](https://github.com/yujiosaka/ElysiaCronyx/commit/16627df40482c7b554c3d3939e816ee4dc2ca02e))
+
 ## [1.2.2](https://github.com/yujiosaka/ElysiaCronyx/compare/v1.2.1...v1.2.2) (2023-10-31)
 
 
