@@ -44,6 +44,7 @@
     "dist"
   ],
   "dependencies": {
+    "cronyx": "^3.0.3",
     "debug": "^4.3.4",
     "mongoose": "^7.6.3"
   },
@@ -61,7 +62,6 @@
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "bun-types": "latest",
-    "cronyx": "^3.0.2",
     "date-fns": "^2.30.0",
     "elysia": "^0.7.21",
     "eslint": "^8.51.0",
@@ -78,7 +78,7 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "cronyx": "^3.0.2",
+    "cronyx": "^3.0.3",
     "elysia": "^0.7.0"
   },
   "lint-staged": {
